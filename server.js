@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors'); // To handle CORS errors
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // استخدم هذا ليتوافق مع Render
 
 // Middleware
 app.use(cors());
@@ -47,6 +47,19 @@ const bakeries = [
   }
 ];
 
+const products = {
+  1: [
+    { id: 101, title: 'كيك الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/cake1.jpg' },
+    { id: 102, title: 'كرواسون بالجبن', subtitle: 'طازج ولذيذ', price: 5, image: 'assets/images/croissant.jpg' }
+  ],
+  2: [
+    { id: 201, title: 'خبز يمني', subtitle: 'خبز طازج يومياً', price: 2, image: 'assets/images/bread.jpg' }
+  ],
+  3: [], // قائمة فارغة للمخبز رقم 3
+  4: [], // قائمة فارغة للمخبز رقم 4
+  5: [], // قائمة فارغة للمخبز رقم 5
+};
+
 // Endpoint to get all bakeries
 app.get('/api/bakeries', (req, res) => {
   console.log('GET /api/bakeries request received');
@@ -54,22 +67,13 @@ app.get('/api/bakeries', (req, res) => {
 });
 
 // Endpoint to get products by bakery ID
-app.get('/api/products/:bakeryId', (req, res) => {
+// **هذا هو المسار الصحيح الذي يجب أن يتطابق مع Flutter**
+app.get('/api/bakeries/:bakeryId/products', (req, res) => {
   const bakeryId = parseInt(req.params.bakeryId);
-  // This is where you would fetch products from a database based on bakeryId
-  // For now, let's return some dummy products
-  if (bakeryId === 1) {
-    res.json([
-      { id: 101, title: 'كيك الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/2.jpg' },
-      { id: 102, title: 'كرواسون بالجبن', subtitle: 'طازج ولذيذ', price: 5, image: 'assets/images/1.jpg' }
-    ]);
-  } else if (bakeryId === 2) {
-    res.json([
-      { id: 201, title: 'خبز يمني', subtitle: 'خبز طازج يومياً', price: 2, image: 'assets/images/2.jpg' }
-    ]);
-  } else {
-    res.json([]); // Return an empty array for other IDs
-  }
+  console.log(`Request received for products of bakery ID: ${bakeryId}`);
+  
+  const bakeryProducts = products[bakeryId] || []; // Return empty array if not found
+  res.json(bakeryProducts);
 });
 
 // User registration endpoint
@@ -83,6 +87,7 @@ app.post('/api/register', (req, res) => {
   }
 });
 
+// ابدأ الخادم بالاستماع
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
