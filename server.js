@@ -49,11 +49,11 @@ const bakeries = [
 
 const products = {
   1: [
-    { id: 101, title: 'كيك الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/cake1.jpg' },
-    { id: 102, title: 'كرواسون بالجبن', subtitle: 'طازج ولذيذ', price: 5, image: 'assets/images/croissant.jpg' }
+    { id: 101, title: 'كيك الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/1.jpg' },
+    { id: 102, title: 'كرواسون بالجبن', subtitle: 'طازج ولذيذ', price: 5, image: 'assets/images/2.jpg' }
   ],
   2: [
-    { id: 201, title: 'خبز يمني', subtitle: 'خبز طازج يومياً', price: 2, image: 'assets/images/bread.jpg' }
+    { id: 201, title: 'خبز يمني', subtitle: 'خبز طازج يومياً', price: 2, image: 'assets/images/3.jpg' }
   ],
   3: [], // قائمة فارغة للمخبز رقم 3
   4: [], // قائمة فارغة للمخبز رقم 4
