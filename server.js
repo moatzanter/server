@@ -51,7 +51,7 @@ const bakeries = [
     id: 6,
     name: "مخبز الربيع",
     location: "صنعاء القديمة",
-    image: "assets/images/4.jpg"
+    image: "assets/images/3.jpg"
   },
 ];
 
