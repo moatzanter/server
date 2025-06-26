@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 // **قم بتحديث هذه المتغيرات بمعلومات حسابك الخاصة**
 const accountSid = 'AC894277f12b623c74718bfa085cd8e04a'; // Replace with your Account SID
 const authToken = '9af1c7576b53ab69b83d4a6702cc77cf';         // Replace with your Auth Token
-const twilioPhoneNumber = '+967771016637';        // Replace with your Twilio phone number
+const twilioPhoneNumber = '+1 478 758 4853';        // Replace with your Twilio phone number
 
 const client = new twilio(accountSid, authToken); // 2. Initialize Twilio client
 
