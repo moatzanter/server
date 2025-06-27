@@ -23,27 +23,27 @@ const bakeries = [
 
 const products = {
   1: [
-    { id: 101, title: 'كيكة الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/cake1.jpg', description: 'كيكة اسفنجية لذيذة بنكهة الشوكولاتة الفاخرة.' },
-    { id: 102, title: 'خبز فرنسي', subtitle: 'خبز طازج ومقرمش', price: 3, image: 'assets/images/bread1.jpg', description: 'خبز باجيت فرنسي تقليدي، مثالي للساندويتشات.' },
-    { id: 103, title: 'معجنات مشكلة', subtitle: 'تشكيلة متنوعة من المعجنات', price: 10, image: 'assets/images/pastry1.jpg', description: 'مجموعة من المعجنات الشهية بحشوات مختلفة.' },
-    { id: 104, title: 'كوكيز برقائق الشوكولاتة', subtitle: 'مقرمش من الخارج وطري من الداخل', price: 5, image: 'assets/images/cookies1.jpg', description: 'كوكيز محضر بعناية ومحشو برقائق الشوكولاتة.' },
+    { id: 101, title: 'كيكة الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/1.jpg', description: 'كيكة اسفنجية لذيذة بنكهة الشوكولاتة الفاخرة.' },
+    { id: 102, title: 'خبز فرنسي', subtitle: 'خبز طازج ومقرمش', price: 3, image: 'assets/images/2.jpg', description: 'خبز باجيت فرنسي تقليدي، مثالي للساندويتشات.' },
+    { id: 103, title: 'معجنات مشكلة', subtitle: 'تشكيلة متنوعة من المعجنات', price: 10, image: 'assets/images/3.jpg', description: 'مجموعة من المعجنات الشهية بحشوات مختلفة.' },
+    { id: 104, title: 'كوكيز برقائق الشوكولاتة', subtitle: 'مقرمش من الخارج وطري من الداخل', price: 5, image: 'assets/images/2.jpg', description: 'كوكيز محضر بعناية ومحشو برقائق الشوكولاتة.' },
   ],
   2: [
-    { id: 201, title: 'خبز صاج', subtitle: 'خبز يمني تقليدي', price: 2, image: 'assets/images/bread2.jpg', description: 'خبز صاج طازج ومثالي للأطباق اليمنية.' },
-    { id: 202, title: 'بسبوسة بالقشطة', subtitle: 'حلى شرقي أصيل', price: 8, image: 'assets/images/basbousa.jpg', description: 'بسبوسة طرية ومسقية بالشيرة مع طبقة من القشطة.' },
-    { id: 203, title: 'كرواسون بالجبنة', subtitle: 'كرواسون هش ولذيذ', price: 4, image: 'assets/images/croissant1.jpg', description: 'كرواسون محشو بالجبنة الطازجة.' },
+    { id: 201, title: 'خبز صاج', subtitle: 'خبز يمني تقليدي', price: 2, image: 'assets/images/1.jpg', description: 'خبز صاج طازج ومثالي للأطباق اليمنية.' },
+    { id: 202, title: 'بسبوسة بالقشطة', subtitle: 'حلى شرقي أصيل', price: 8, image: 'assets/images/3.jpg', description: 'بسبوسة طرية ومسقية بالشيرة مع طبقة من القشطة.' },
+    { id: 203, title: 'كرواسون بالجبنة', subtitle: 'كرواسون هش ولذيذ', price: 4, image: 'assets/images/2.jpg', description: 'كرواسون محشو بالجبنة الطازجة.' },
   ],
   3: [
-    { id: 301, title: 'دونات مغطاة بالسكر', subtitle: 'دونات طازجة يوميًا', price: 2, image: 'assets/images/donuts1.jpg', description: 'دونات طرية ومغطاة بالسكر الناعم.' },
-    { id: 302, title: 'كعك العيد', subtitle: 'كعك تقليدي بنكهات مختلفة', price: 7, image: 'assets/images/kaak.jpg', description: 'كعك هش ومذاقه رائع، مناسب لكل المناسبات.' },
+    { id: 301, title: 'دونات مغطاة بالسكر', subtitle: 'دونات طازجة يوميًا', price: 2, image: 'assets/images/2.jpg', description: 'دونات طرية ومغطاة بالسكر الناعم.' },
+    { id: 302, title: 'كعك العيد', subtitle: 'كعك تقليدي بنكهات مختلفة', price: 7, image: 'assets/images/1.jpg', description: 'كعك هش ومذاقه رائع، مناسب لكل المناسبات.' },
   ],
   4: [
-    { id: 401, title: 'بيتزا صغيرة', subtitle: 'بيتزا سريعة ومناسبة للجميع', price: 6, image: 'assets/images/pizza.jpg', description: 'بيتزا صغيرة بحشوة الخضروات والجبنة.' },
-    { id: 402, title: 'كيكة الفواكه', subtitle: 'كيكة منعشة بالفواكه الموسمية', price: 20, image: 'assets/images/cake2.jpg', description: 'كيكة خفيفة مزينة بالفواكه الطازجة.' },
+    { id: 401, title: 'بيتزا صغيرة', subtitle: 'بيتزا سريعة ومناسبة للجميع', price: 6, image: 'assets/images/1.jpg', description: 'بيتزا صغيرة بحشوة الخضروات والجبنة.' },
+    { id: 402, title: 'كيكة الفواكه', subtitle: 'كيكة منعشة بالفواكه الموسمية', price: 20, image: 'assets/images/2.jpg', description: 'كيكة خفيفة مزينة بالفواكه الطازجة.' },
   ],
   5: [
-    { id: 501, title: 'خبز بلدي', subtitle: 'خبز تقليدي محلي', price: 1, image: 'assets/images/bread3.jpg', description: 'خبز بلدي ساخن وطازج من الفرن.' },
-    { id: 502, title: 'بقلاوة', subtitle: 'حلى شرقي مقرمش بالعسل', price: 12, image: 'assets/images/baklava.jpg', description: 'طبقات من العجين الرقيق محشوة بالمكسرات ومسقية بالعسل.' },
+    { id: 501, title: 'خبز بلدي', subtitle: 'خبز تقليدي محلي', price: 1, image: 'assets/images/3.jpg', description: 'خبز بلدي ساخن وطازج من الفرن.' },
+    { id: 502, title: 'بقلاوة', subtitle: 'حلى شرقي مقرمش بالعسل', price: 12, image: 'assets/images/1.jpg', description: 'طبقات من العجين الرقيق محشوة بالمكسرات ومسقية بالعسل.' },
   ],
 };
 
