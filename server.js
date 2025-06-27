@@ -11,8 +11,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// --- Dummy Data (In-memory storage) ---
-// In a real app, this would be a database like MongoDB or PostgreSQL
+// --- Dummy Data ---
+// In a real app, this would be a database
 const bakeries = [
   { id: 1, name: "مخبز رويال", location: "بيت بوس", image: "assets/images/1.jpg" },
   { id: 2, name: "مخبز الشفاء", location: "شارع تعز", image: "assets/images/2.jpg" },
@@ -47,61 +47,20 @@ const products = {
   ],
 };
 
-const registeredUsers = []; // Stores registered user data (name, phone, password)
+const registeredUsers = [
+  { name: 'user1', password: 'password1' },
+  { name: 'user2', password: 'password2' },
+];
 
-// --- API Endpoints ---
+// Routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the Sweets Bakery API!');
+});
 
 // Endpoint to get all bakeries
 app.get('/api/bakeries', (req, res) => {
   res.json(bakeries);
 });
-
-// ... (الكود السابق) ...
-
-// **New: In-memory storage for OTP codes**
-const otpStorage = {}; // Stores { phoneNumber: otpCode }
-
-// **New Endpoint: Generate and send OTP code**
-app.post('/api/generate-otp', (req, res) => {
-  const { phoneNumber } = req.body;
-  
-  if (!phoneNumber || !/^7\d{8}$/.test(phoneNumber)) {
-    return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
-  }
-
-  // Generate a 6-digit random OTP code
-  const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-  
-  // Store the OTP code in memory (for a real app, use a database with an expiration time)
-  otpStorage[phoneNumber] = otpCode;
-
-  console.log(`Generated OTP for ${phoneNumber}: ${otpCode}`);
-
-  // In a real application, you would use a service like Twilio or Vonage to send an SMS.
-  // We'll just return a success message for this dummy server.
-  res.status(200).json({ success: true, message: 'OTP code sent successfully!', otp: otpCode });
-});
-
-// **New Endpoint: Verify OTP code**
-app.post('/api/verify-otp', (req, res) => {
-  const { phoneNumber, otpCode } = req.body;
-  
-  if (!phoneNumber || !otpCode) {
-    return res.status(400).json({ success: false, message: 'Phone number and OTP code are required.' });
-  }
-
-  // Check if the OTP code exists and matches the stored one
-  if (otpStorage[phoneNumber] && otpStorage[phoneNumber] === otpCode) {
-    // Correct OTP, clear it from storage after verification
-    delete otpStorage[phoneNumber];
-    res.status(200).json({ success: true, message: 'OTP verified successfully!' });
-  } else {
-    // Incorrect or expired OTP
-    res.status(401).json({ success: false, message: 'Invalid or expired OTP code.' });
-  }
-});
-
-// ... (الكود السابق) ...
 
 // Endpoint to get products for a specific bakery
 app.get('/api/bakeries/:bakeryId/products', (req, res) => {
@@ -112,65 +71,48 @@ app.get('/api/bakeries/:bakeryId/products', (req, res) => {
   res.json(bakeryProducts);
 });
 
-// **Updated: Endpoint for user registration**
-// Now saves name, phone, and password
+// Endpoint for user registration
 app.post('/api/register', (req, res) => {
-  const { name, phone, password } = req.body;
+  const { name, phone } = req.body;
   console.log('Received registration request:');
-  console.log(`Name: ${name}, Phone: ${phone}, Password: ${password ? '*****' : 'N/A'}`);
+  console.log(`Name: ${name}, Phone: ${phone}`);
 
-  // Server-side validation
   const phoneRegex = /^7\d{8}$/;
   if (!phoneRegex.test(phone)) {
-    return res.status(400).json({ success: false, message: 'Invalid phone number format. Must start with 7 and be 9 digits.' });
+    return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
   }
 
-  // Check if the phone number is already registered
   const userExists = registeredUsers.find(user => user.phone === phone);
   if (userExists) {
     return res.status(409).json({ success: false, message: 'This phone number is already registered.' });
   }
-  
-  // Validate password length
-  if (!password || password.length < 6) {
-      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long.' });
-  }
 
-  // Save the new user (in-memory)
-  const newUser = { name, phone, password };
+  const newUser = { name, phone };
   registeredUsers.push(newUser);
 
   console.log('User registered successfully:');
   console.log(newUser);
   console.log('Current registered users:', registeredUsers);
-  
-  res.status(200).json({ success: true, message: 'User registered successfully!' });
+  res.status(201).json({ success: true, message: 'User registered successfully!' });
 });
 
-// **New: Endpoint for user login**
-// Verifies user's phone number and password
+// **New: Endpoint for user login verification**
 app.post('/api/login', (req, res) => {
-  const { phone, password } = req.body;
+  const { name, password } = req.body;
   console.log('Received login request:');
-  console.log(`Phone: ${phone}, Password: ${password ? '*****' : 'N/A'}`);
+  console.log(`Name: ${name}, Password: ${password}`);
 
-  // Find the user by phone number
-  const user = registeredUsers.find(user => user.phone === phone);
+  const user = registeredUsers.find(
+    (user) => user.name === name && user.password === password
+  );
 
-  if (!user) {
-    // User not found
-    return res.status(404).json({ success: false, message: 'Phone number not found.' });
+  if (user) {
+    console.log('Login successful for user:', name);
+    res.status(200).json({ success: true, message: 'Login successful!' });
+  } else {
+    console.log('Login failed for user:', name);
+    res.status(401).json({ success: false, message: 'Invalid username or password.' });
   }
-
-  // Check if the password matches
-  if (user.password !== password) {
-    // Incorrect password
-    return res.status(401).json({ success: false, message: 'Incorrect password.' });
-  }
-  
-  // Login successful
-  console.log('User logged in successfully:', user.name);
-  res.status(200).json({ success: true, message: 'Login successful!', user: { name: user.name, phone: user.phone } });
 });
 
 
