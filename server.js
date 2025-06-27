@@ -23,90 +23,37 @@ const bakeries = [
 
 const products = {
   1: [
-    { id: 101, title: 'كيكة الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/7.png', description: 'كيكة شهية محضرة من أجود أنواع الشوكولاتة.' },
-    { id: 102, title: 'خبز يمني', subtitle: 'خبز طازج يومياً', price: 5, image: 'assets/images/8.png', description: 'خبز تقليدي محضر بعناية ومخبوز يوميًا.' },
-    { id: 103, title: 'بسبوسة قشطة', subtitle: 'بسبوسة بالقشطة الطازجة', price: 10, image: 'assets/images/3.jpg', description: 'بسبوسة لذيذة محشوة بالقشطة.' },
-    { id: 104, title: 'معجنات مشكلة', subtitle: 'تشكيلة من المعجنات', price: 20, image: 'assets/images/7.png', description: 'مجموعة متنوعة من المعجنات المالحة والحلويات.' },
+    { id: 101, title: 'كيكة الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/1.jpg', description: 'كيكة اسفنجية بالشوكولاتة مع طبقة غنية من كريمة الشوكولاتة.' },
+    { id: 102, title: 'معجنات الجبنة', subtitle: 'معجنات هشة بالجبنة', price: 5, image: 'assets/images/2.jpg', description: 'معجنات طازجة ومقرمشة محشوة بأجود أنواع الجبن.' },
+    { id: 103, title: 'خبز يمني', subtitle: 'خبز تقليدي', price: 2, image: 'assets/images/3.jpg', description: 'خبز يمني تقليدي مخبوز في التنور.' },
+    { id: 104, title: 'كيكة الفواكه', subtitle: 'كيكة منعشة بالفواكه', price: 20, image: 'assets/images/4.jpg', description: 'كيكة خفيفة مزينة بالفواكه الموسمية الطازجة.' },
   ],
   2: [
-    { id: 201, title: 'خبز صاج', subtitle: 'صاج طازج', price: 6, image: 'assets/images/8.png', description: 'خبز الصاج الطازج.' },
-    { id: 202, title: 'كيكة فانيليا', subtitle: 'كيكة الفانيليا الناعمة', price: 18, image: 'assets/images/7.png', description: 'كيكة هشة ولذيذة بنكهة الفانيليا.' },
+    { id: 201, title: 'خبز الشفاء', subtitle: 'خبز أسمر صحي', price: 3, image: 'assets/images/1.jpg', description: 'خبز أسمر مصنوع من الحبوب الكاملة.' },
+    { id: 202, title: 'كوكيز الشوفان', subtitle: 'كوكيز صحي', price: 4, image: 'assets/images/2.jpg', description: 'كوكيز الشوفان مع الزبيب.' },
   ],
   3: [
-    { id: 301, title: 'كنافة نابلسية', subtitle: 'كنافة بالقشطة', price: 25, image: 'assets/images/7.png', description: 'كنافة نابلسية أصلية.' },
+    { id: 301, title: 'كرواسون', subtitle: 'كرواسون زبدة', price: 7, image: 'assets/images/3.jpg', description: 'كرواسون فرنسي هش بالزبدة.' },
+    { id: 302, title: 'خبز بالسمسم', subtitle: 'خبز مع سمسم', price: 2, image: 'assets/images/4.jpg', description: 'خبز أبيض مغطى بالسمسم.' },
   ],
   4: [
-    { id: 401, title: 'بيتزا صغيرة', subtitle: 'بيتزا بالخضروات', price: 12, image: 'assets/images/8.png', description: 'بيتزا صغيرة مع الخضروات الطازجة.' },
+    { id: 401, title: 'خبز عربي', subtitle: 'خبز يومي', price: 1, image: 'assets/images/1.jpg', description: 'خبز عربي تقليدي.' },
   ],
   5: [
-    { id: 501, title: 'بسكويت العيد', subtitle: 'بسكويت متنوع', price: 8, image: 'assets/images/7.png', description: 'بسكويت شهي ومقرمش.' },
-  ],
+    { id: 501, title: 'كعك العيد', subtitle: 'كعك تقليدي', price: 12, image: 'assets/images/2.jpg', description: 'كعك تقليدي محشو بالتمر.' },
+  ]
 };
 
-const registeredUsers = []; // تخزين مؤقت للمستخدمين المسجلين
-// **بداية الجزء المضاف للتحقق من رقم الهاتف**
-// تخزين مؤقت لرموز التحقق (OTP)
-// في بيئة الإنتاج، استخدم قاعدة بيانات حقيقية مع وقت انتهاء صلاحية
-const otpStore = {}; // مثال: { '967771234567': '123456' }
+const registeredUsers = [];
 
-// === Endpoint 1: لإنشاء وإرسال رمز التحقق (OTP) ===
-// هذا الـ Endpoint يستقبل رقم الهاتف وينشئ رمزًا عشوائيًا ويخزنه
-app.post('/api/generate-otp', (req, res) => {
-    const { phoneNumber } = req.body;
-
-    if (!phoneNumber) {
-        return res.status(400).json({ success: false, message: 'رقم الهاتف مطلوب.' });
-    }
-
-    // إنشاء رمز عشوائي مكون من 6 أرقام
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // تخزين الرمز في قاعدة البيانات الوهمية (الـ Map)
-    otpStore[phoneNumber] = otpCode;
-
-    // **هذا الجزء هو الأهم:** طباعة الرمز في الطرفية لتتمكن من إرساله يدوياً
-    console.log(`\n===================================`);
-    console.log(`تم إنشاء رمز OTP جديد:`);
-    console.log(`  - رقم الهاتف: ${phoneNumber}`);
-    console.log(`  - رمز التحقق (OTP): ${otpCode}`);
-    console.log(`===================================\n`);
-
-    // إرسال استجابة بنجاح العملية إلى تطبيق Flutter
-    res.status(200).json({ success: true, message: 'تم إنشاء رمز التحقق. يرجى التحقق من الطرفية لإرساله يدوياً.' });
-});
-
-// === Endpoint 2: للتحقق من رمز OTP ===
-// هذا الـ Endpoint يستقبل رقم الهاتف والرمز المدخل من المستخدم ويتحقق منهما
-app.post('/api/verify-otp', (req, res) => {
-    const { phoneNumber, otpCode } = req.body;
-
-    if (!phoneNumber || !otpCode) {
-        return res.status(400).json({ success: false, message: 'رقم الهاتف ورمز التحقق مطلوبان.' });
-    }
-
-    const storedCode = otpStore[phoneNumber];
-
-    if (!storedCode) {
-        return res.status(404).json({ success: false, message: 'لم يتم العثور على رمز لهذا الرقم. الرجاء طلب رمز جديد.' });
-    }
-
-    if (storedCode === otpCode) {
-        // الرمز صحيح!
-        delete otpStore[phoneNumber]; // حذف الرمز من الذاكرة بعد الاستخدام لمرة واحدة
-        res.status(200).json({ success: true, message: 'تم التحقق من الرمز بنجاح.' });
-    } else {
-        // الرمز غير صحيح
-        res.status(401).json({ success: false, message: 'رمز التحقق غير صحيح.' });
-    }
-});
-// **نهاية الجزء المضاف**
-
-// --- API Endpoints الموجودة سابقاً ---
+// --- API Endpoints ---
+// Endpoint to get all bakeries
 app.get('/api/bakeries', (req, res) => {
   console.log('Fetching all bakeries...');
   res.json(bakeries);
 });
 
+// Endpoint to get products for a specific bakery
 app.get('/api/bakeries/:bakeryId/products', (req, res) => {
   const bakeryId = parseInt(req.params.bakeryId);
   console.log(`Fetching products for bakery ID: ${bakeryId}`);
@@ -140,19 +87,12 @@ app.post('/api/register', (req, res) => {
 
   console.log('User registered successfully:');
   console.log(newUser);
-  console.log('Current registered users:', registeredUsers.map(user => user.phone));
+  console.log('Current registered users:', registeredUsers);
 
-  res.status(201).json({ success: true, message: 'User registered successfully.' });
+  res.status(201).json({ success: true, message: 'User registered successfully!' });
 });
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Backend server is running on http://localhost:${port}`);
-  console.log(`Endpoints available:`);
-  console.log(`- GET /api/bakeries`);
-  console.log(`- GET /api/bakeries/:bakeryId/products`);
-  console.log(`- POST /api/register`);
-  // **الـ Endpoints الجديدة**
-  console.log(`- POST /api/generate-otp`);
-  console.log(`- POST /api/verify-otp`);
+  console.log(`Server listening on port ${port}`);
 });
