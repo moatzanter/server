@@ -23,27 +23,34 @@ const bakeries = [
 
 const products = {
   1: [
-    { id: 101, title: 'كيكة الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/1.jpg', description: 'وصف المنتج' },
-    { id: 102, title: 'كرواسون بالجبن', subtitle: 'طازج ومقرمش', price: 10, image: 'assets/images/2.jpg', description: 'وصف المنتج' },
+    { id: 101, title: 'كيكة الشوكولاتة', subtitle: 'كيكة غنية بالكريمة', price: 15, image: 'assets/images/7.png' },
+    { id: 102, title: 'كرواسون بالجبن', subtitle: 'كرواسون هش ولذيذ', price: 8, image: 'assets/images/8.png' },
+    { id: 103, title: 'خبز صاج طازج', subtitle: 'مخبوز يومياً', price: 5, image: 'assets/images/4.webp' },
   ],
   2: [
-    { id: 201, title: 'خبز يمني', subtitle: 'خبز تقليدي', price: 5, image: 'assets/images/3.jpg', description: 'وصف المنتج' },
-    { id: 202, title: 'كعك بالعسل', subtitle: 'محلى بالعسل الطبيعي', price: 8, image: 'assets/images/4.jpg', description: 'وصف المنتج' },
+    { id: 201, title: 'معجنات مشكلة', subtitle: 'أشكال ونكهات مختلفة', price: 20, image: 'assets/images/7.png' },
+    { id: 202, title: 'جاتوه فواكه', subtitle: 'طبقات من الفواكه والكريمة', price: 25, image: 'assets/images/8.png' },
   ],
-  3: [],
-  4: [],
-  5: [],
+  3: [
+    { id: 301, title: 'بيتزا صغيرة', subtitle: 'بيتزا بالخضار والزيتون', price: 12, image: 'assets/images/7.png' },
+  ],
+  4: [
+    { id: 401, title: 'كيكة عيد ميلاد', subtitle: 'حسب الطلب', price: 50, image: 'assets/images/7.png' },
+    { id: 402, title: 'كوكيز الشوكولاتة', subtitle: 'هش ولذيذ', price: 7, image: 'assets/images/8.png' },
+  ],
+  5: [
+    { id: 501, title: 'خبز البرجر', subtitle: 'مخبوز طازج', price: 10, image: 'assets/images/7.png' },
+  ],
 };
 
-// **هنا سنحفظ المستخدمين المسجلين (في الذاكرة)**
-// سنحفظ اسم المستخدم والرمز
-const registeredUsers = [];
-const otps = {}; // لحفظ رموز OTP (رقم الهاتف: الرمز)
+const registeredUsers = [
+  // A dummy user for testing
+  { name: 'Test User', phone: '777111222', password: '123' },
+];
 
-// Endpoints
-app.get('/', (req, res) => {
-  res.send('API is running!');
-});
+let otpCodes = {}; // Store OTP codes in memory
+
+// --- API Endpoints ---
 
 // Get all bakeries
 app.get('/api/bakeries', (req, res) => {
@@ -59,93 +66,76 @@ app.get('/api/bakeries/:bakeryId/products', (req, res) => {
   res.json(bakeryProducts);
 });
 
-// **تعديل: نقطة النهاية لتسجيل مستخدم جديد (بالاسم والرمز)**
+// **Updated: Endpoint for user registration with phone and password**
 app.post('/api/register', (req, res) => {
-  const { name, password } = req.body;
+  const { name, phone, password } = req.body;
   console.log('Received registration request:');
-  console.log(`Name: ${name}, Password: ${password}`);
+  console.log(`Name: ${name}, Phone: ${phone}, Password: ${password}`);
 
-  // **التحقق من وجود الاسم مسبقاً**
-  const userExists = registeredUsers.find(user => user.name === name);
-  if (userExists) {
-    return res.status(409).json({ success: false, message: 'This username is already taken.' });
+  // Server-side validation for phone number (9 digits, starts with 7)
+  const phoneRegex = /^7\d{8}$/;
+  if (!phoneRegex.test(phone)) {
+    return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
   }
 
-  // **حفظ المستخدم الجديد (في الذاكرة حالياً)**
-  const newUser = { name, password };
+  // Check if phone number is already registered
+  const userExists = registeredUsers.find(user => user.phone === phone);
+  if (userExists) {
+    return res.status(409).json({ success: false, message: 'This phone number is already registered.' });
+  }
+
+  // Save the new user (in-memory for now)
+  const newUser = { name, phone, password };
   registeredUsers.push(newUser);
 
   console.log('User registered successfully:');
   console.log(newUser);
   console.log('Current registered users:', registeredUsers);
-  
-  res.status(201).json({ success: true, message: 'User registered successfully.' });
+
+  res.status(201).json({ success: true, message: 'User registered successfully!' });
 });
 
-
-// **نقطة نهاية جديدة لتسجيل الدخول (login)**
+// **New: Endpoint for user login with phone and password**
 app.post('/api/login', (req, res) => {
-    const { name, password } = req.body;
-    console.log('Received login request:');
-    console.log(`Name: ${name}, Password: ${password}`);
-  
-    // البحث عن المستخدم
-    const user = registeredUsers.find(user => user.name === name && user.password === password);
-  
-    if (user) {
-      console.log('User logged in successfully:', user);
-      res.status(200).json({ success: true, message: 'Login successful.' });
-    } else {
-      console.log('Login failed: Invalid credentials');
-      res.status(401).json({ success: false, message: 'Invalid username or password.' });
-    }
+  const { phone, password } = req.body;
+  console.log('Received login request:');
+  console.log(`Phone: ${phone}, Password: ${password}`);
+
+  // Find the user by phone and password
+  const user = registeredUsers.find(user => user.phone === phone && user.password === password);
+
+  if (user) {
+    console.log('Login successful for user:', user.name);
+    return res.status(200).json({ success: true, message: 'Login successful!' });
+  } else {
+    console.log('Login failed: Invalid credentials.');
+    return res.status(401).json({ success: false, message: 'Invalid phone number or password.' });
+  }
 });
 
-
-// **نقطة نهاية لتوليد رمز OTP**
+// Endpoint to generate a new OTP
 app.post('/api/generate-otp', (req, res) => {
   const { phoneNumber } = req.body;
-
-  // **التحقق من صحة رقم الهاتف في الخادم (Server-side validation)**
-  // (9 أرقام، تبدأ بـ 7)
-  const phoneRegex = /^7\d{8}$/;
-  if (!phoneRegex.test(phoneNumber)) {
-    return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
-  }
-
-  // توليد رمز مكون من 6 أرقام
-  const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-  
-  // حفظ الرمز مع رقم الهاتف (هذا مؤقت، في تطبيق حقيقي سيتم استخدام قاعدة بيانات)
-  otps[phoneNumber] = otpCode;
-
+  // In a real app, you would generate a random code and send it via SMS
+  const otpCode = '123456'; // For testing purposes, a fixed code
+  otpCodes[phoneNumber] = otpCode;
   console.log(`Generated OTP for ${phoneNumber}: ${otpCode}`);
-
-  // في التطبيق الحقيقي، هنا يتم إرسال الرمز عبر خدمة SMS
-  // For now, we'll just send it in the response for testing
-  res.status(200).json({ success: true, message: 'OTP sent successfully.', otp: otpCode });
+  res.status(200).json({ success: true, message: 'OTP sent successfully!' });
 });
 
-// **نقطة نهاية للتحقق من رمز OTP**
+// Endpoint to verify the OTP
 app.post('/api/verify-otp', (req, res) => {
   const { phoneNumber, otpCode } = req.body;
-  
-  console.log(`Verifying OTP for ${phoneNumber}. Received code: ${otpCode}`);
+  console.log(`Verifying OTP for ${phoneNumber} with code ${otpCode}`);
 
-  // التحقق مما إذا كان الرمز المرسل يطابق الرمز المحفوظ
-  if (otps[phoneNumber] && otps[phoneNumber] === otpCode) {
-    // قم بمسح الرمز بعد التحقق
-    delete otps[phoneNumber];
-    console.log(`OTP for ${phoneNumber} verified successfully.`);
-    res.status(200).json({ success: true, message: 'OTP verified successfully.' });
+  if (otpCodes[phoneNumber] === otpCode) {
+    delete otpCodes[phoneNumber]; // Remove the code after successful verification
+    res.status(200).json({ success: true, message: 'OTP verified successfully!' });
   } else {
-    console.log(`Verification failed for ${phoneNumber}. Incorrect code.`);
-    res.status(400).json({ success: false, message: 'Invalid or expired OTP code.' });
+    res.status(400).json({ success: false, message: 'Invalid OTP code.' });
   }
 });
 
-
-// Start the server
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
