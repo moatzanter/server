@@ -56,6 +56,53 @@ app.get('/api/bakeries', (req, res) => {
   res.json(bakeries);
 });
 
+// ... (الكود السابق) ...
+
+// **New: In-memory storage for OTP codes**
+const otpStorage = {}; // Stores { phoneNumber: otpCode }
+
+// **New Endpoint: Generate and send OTP code**
+app.post('/api/generate-otp', (req, res) => {
+  const { phoneNumber } = req.body;
+  
+  if (!phoneNumber || !/^7\d{8}$/.test(phoneNumber)) {
+    return res.status(400).json({ success: false, message: 'Invalid phone number format.' });
+  }
+
+  // Generate a 6-digit random OTP code
+  const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+  
+  // Store the OTP code in memory (for a real app, use a database with an expiration time)
+  otpStorage[phoneNumber] = otpCode;
+
+  console.log(`Generated OTP for ${phoneNumber}: ${otpCode}`);
+
+  // In a real application, you would use a service like Twilio or Vonage to send an SMS.
+  // We'll just return a success message for this dummy server.
+  res.status(200).json({ success: true, message: 'OTP code sent successfully!', otp: otpCode });
+});
+
+// **New Endpoint: Verify OTP code**
+app.post('/api/verify-otp', (req, res) => {
+  const { phoneNumber, otpCode } = req.body;
+  
+  if (!phoneNumber || !otpCode) {
+    return res.status(400).json({ success: false, message: 'Phone number and OTP code are required.' });
+  }
+
+  // Check if the OTP code exists and matches the stored one
+  if (otpStorage[phoneNumber] && otpStorage[phoneNumber] === otpCode) {
+    // Correct OTP, clear it from storage after verification
+    delete otpStorage[phoneNumber];
+    res.status(200).json({ success: true, message: 'OTP verified successfully!' });
+  } else {
+    // Incorrect or expired OTP
+    res.status(401).json({ success: false, message: 'Invalid or expired OTP code.' });
+  }
+});
+
+// ... (الكود السابق) ...
+
 // Endpoint to get products for a specific bakery
 app.get('/api/bakeries/:bakeryId/products', (req, res) => {
   const bakeryId = parseInt(req.params.bakeryId);
