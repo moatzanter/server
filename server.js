@@ -127,9 +127,9 @@ app.post('/api/verify-otp', (req, res) => {
 
 // Existing registration endpoint - remains for name-based registration
 app.post('/api/register', (req, res) => {
-  const { name, phone } = req.body;
+  const { name, password } = req.body;
   console.log('Received registration request:');
-  console.log(`Name: ${name}, Phone: ${phone}`);
+  console.log(`Name: ${name}, Phone: ${password}`);
 
   const phoneRegex = /^7\d{8}$/;
   if (!phoneRegex.test(phone)) {
@@ -141,7 +141,7 @@ app.post('/api/register', (req, res) => {
     return res.status(409).json({ success: false, message: 'This phone number is already registered.' });
   }
 
-  const newUser = { name, phone };
+  const newUser = { name, password };
   registeredUsers.push(newUser);
 
   console.log('User registered successfully:');
